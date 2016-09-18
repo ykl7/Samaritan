@@ -6,4 +6,5 @@
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="mic_tap">Tap on mic to speak</string>
     <string name="generate_rec">Netflix and Chill</string>
+    <string name="explanation">Explain NFC</string>
 </resources>

@@ -31,7 +31,6 @@ public class CommandEntryActivity extends AppCompatActivity {
         txtSpeechInput = (TextView) findViewById(R.id.textSpeechInput);
         btnSpeak = (ImageButton) findViewById(R.id.speechButton);
 
-//        getActionBar().hide();
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
             @Override
