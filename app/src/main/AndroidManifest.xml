@@ -3,6 +3,7 @@
     package="com.darkarmy.ykl.samaritan">
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -32,7 +33,7 @@
 
             <meta-data
                 android:name="android.nfc.action.NDEF_DISCOVERED"
-                android:resource="nfc_tech_filter" />
+                android:resource="@xml/nfc_tech_filter" />
         </activity>
     </application>
 

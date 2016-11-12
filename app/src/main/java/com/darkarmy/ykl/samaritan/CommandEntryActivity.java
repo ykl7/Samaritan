@@ -1,10 +1,12 @@
 package com.darkarmy.ykl.samaritan;
 
+import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -20,6 +22,8 @@ public class CommandEntryActivity extends AppCompatActivity {
     private TextView txtSpeechInput;
     private ImageButton btnSpeak;
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private AudioManager mAudioManager;
+    private boolean mPhoneIsSilent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +32,11 @@ public class CommandEntryActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_command_entry);
 
+        Log.d("jhsj", "CHECK");
         txtSpeechInput = (TextView) findViewById(R.id.textSpeechInput);
         btnSpeak = (ImageButton) findViewById(R.id.speechButton);
-
+        mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
+        checkIfPhoneIsSilent();
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -54,7 +60,7 @@ public class CommandEntryActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),
                     getString(R.string.speech_not_supported),
                     Toast.LENGTH_SHORT).show();
-//            switchToMovies();
+            switchToMovies();
         }
     }
 
@@ -69,15 +75,38 @@ public class CommandEntryActivity extends AppCompatActivity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     txtSpeechInput.setText(result.get(0));
-                    // put in 5 second time here to display recognized text - use handler (wait then change activity)
+                    // put in 2 second time here to display recognized text - use handler (wait then change activity)
+                    Log.d("msg", "MSG" + result.get(0));
                     if (result.get(0).equals("MOVIES"))  {
                         switchToMovies();
+                    }
+                    else if (result.get(0).equals("CARD"))  {
+                        openCards();;
+                    }
+                    else if (result.get(0).equals("SILENCE"))  {
+                        if (mPhoneIsSilent) {
+                            //change back to normal mode
+                            mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                            mPhoneIsSilent = false;
+                        }
+                        else {
+                            //change to silent mode
+                            mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            mAudioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                            mPhoneIsSilent = true;
+                        }
                     }
                 }
                 break;
             }
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkIfPhoneIsSilent();
     }
 
     @Override
@@ -90,5 +119,20 @@ public class CommandEntryActivity extends AppCompatActivity {
     public void switchToMovies ()  {
         Intent intent = new Intent(this, MovieActivity.class);
         startActivity(intent);
+    }
+
+    public void openCards ()  {
+        Intent intent = new Intent(this, NFCReader.class);
+        startActivity(intent);
+    }
+
+    private void checkIfPhoneIsSilent() {
+        int ringermode = mAudioManager.getRingerMode();
+        if (ringermode == AudioManager.RINGER_MODE_SILENT) {
+            mPhoneIsSilent = true;
+        }
+        else {
+            mPhoneIsSilent = false;
+        }
     }
 }

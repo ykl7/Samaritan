@@ -7,9 +7,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+import java.util.Random;
+
 public class MovieActivity extends AppCompatActivity {
 
     Button generateRecButton;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +22,25 @@ public class MovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie);
 
         generateRecButton = (Button) findViewById(R.id.movieRec);
+
+        String[] movieTitles = {"Goldfinger",
+                "Breakfast at Tiffany's",
+                "Harry Potter",
+                "Sholay",
+                "Gunda",
+                "Doctor Strange",
+                "X Men",
+                "Theory of Everything",
+                "Danish Girl",
+                "War Horse"};
+
+        Random r = new Random();
+        int index = r.nextInt(11 - 0) + 0;
+
+        String param = movieTitles[index];
+        param.replace(" ", "+");
+
+        url = "http://www.omdbapi.com/?t=" + param + "&y=&plot=short&r=json";
 
         generateRecButton.setOnClickListener(new View.OnClickListener() {
 
@@ -31,6 +53,7 @@ public class MovieActivity extends AppCompatActivity {
 
     public void generateRecommendation ()   {
         Intent intent = new Intent(this, Recommendation.class);
+        intent.putExtra("url", url);
         startActivity(intent);
     }
 }
