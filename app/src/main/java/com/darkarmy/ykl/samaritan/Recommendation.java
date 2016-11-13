@@ -71,14 +71,14 @@ public class Recommendation extends AppCompatActivity {
 
             if (jsonStr != null) {
                 try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
+//                    JSONObject jsonObj = new JSONObject(jsonStr);
 
-                    // Getting JSON Array node
-                    JSONArray data = jsonObj.getJSONArray("contacts");
-
-                    // looping through All Contacts
-                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject c = data.getJSONObject(i);
+//                    // Getting JSON Array node
+//                    JSONArray data = jsonObj.getJSONArray("contacts");
+//
+//                    // looping through All Contacts
+//                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject c = new JSONObject(jsonStr);
 
                         String title = c.getString("Title");
                         String year = c.getString("Year");
@@ -95,7 +95,7 @@ public class Recommendation extends AppCompatActivity {
 
                         // adding each child node to HashMap key => value
                         movie.put("title", title);
-                        movie.put("year", year);
+                        movie.put("year", "Year"+year);
                         movie.put("genre", genre);
                         movie.put("plot", plot);
                         movie.put("director", director);
@@ -106,7 +106,7 @@ public class Recommendation extends AppCompatActivity {
 
                         // adding contact to contact list
                         omdbData.add(movie);
-                    }
+//                    }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {

@@ -38,7 +38,7 @@ public class MovieActivity extends AppCompatActivity {
         int index = r.nextInt(11 - 0) + 0;
 
         String param = movieTitles[index];
-        param.replace(" ", "+");
+        param = param.replace(" ", "+");
 
         url = "http://www.omdbapi.com/?t=" + param + "&y=&plot=short&r=json";
 

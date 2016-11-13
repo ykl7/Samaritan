@@ -5,8 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -20,6 +26,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * Created by apple on 13/11/16.
@@ -46,9 +57,9 @@ public class AadharInfo extends AppCompatActivity implements RecyclerViewAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_aadhar);
 
-        mRealm = Realm.getInstance(new RealmConfiguration.Builder(MainActivity.this).build());
+        mRealm = Realm.getInstance(new RealmConfiguration.Builder(AadharInfo.this).build());
 
         mLayout = (CoordinatorLayout) findViewById(R.id.layout);
         mReadCardList = (RecyclerView) findViewById(R.id.read_card_list);
@@ -78,18 +89,18 @@ public class AadharInfo extends AppCompatActivity implements RecyclerViewAdapter
                 @Override
                 public void onClick(View v) {
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        startActivityForResult(new Intent(MainActivity.this, ScannerActivity.class), SCAN_REQ_CODE);
+                        startActivityForResult(new Intent(AadharInfo.this, ScannerActivity.class), SCAN_REQ_CODE);
                     } else {
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(AadharInfo.this, Manifest.permission.CAMERA)) {
                             Snackbar.make(mLayout, "Camera Permission Required", Snackbar.LENGTH_INDEFINITE)
                                     .setAction(android.R.string.ok, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+                                            ActivityCompat.requestPermissions(AadharInfo.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
                                         }
                                     }).show();
                         } else
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
+                            ActivityCompat.requestPermissions(AadharInfo.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
                     }
                 }
             });
@@ -155,53 +166,55 @@ public class AadharInfo extends AppCompatActivity implements RecyclerViewAdapter
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == SCAN_REQ_CODE) {
-            String contents = data.getStringExtra(ScannerActivity.SCAN_CONTENTS);
-            String format = data.getStringExtra(ScannerActivity.SCAN_FORMAT);
-            Log.d(TAG, format);
-            Log.d(TAG, contents);
+        if (resultCode != RESULT_CANCELED){
+            if (resultCode == RESULT_OK && requestCode == SCAN_REQ_CODE) {
+                String contents = data.getStringExtra(ScannerActivity.SCAN_CONTENTS);
+                String format = data.getStringExtra(ScannerActivity.SCAN_FORMAT);
+                Log.d(TAG, format);
+                Log.d(TAG, contents);
 
 
-            XmlPullParserFactory xmlFactoryObject;
-            try {
-                xmlFactoryObject = XmlPullParserFactory.newInstance();
-                XmlPullParser myparser = xmlFactoryObject.newPullParser();
-                myparser.setInput(new StringReader(contents));
-                int event = myparser.getEventType();
-                while (event != XmlPullParser.END_DOCUMENT) {
-                    String name = myparser.getName();
-                    switch (event) {
-                        case XmlPullParser.START_TAG:
-                            break;
+                XmlPullParserFactory xmlFactoryObject;
+                try {
+                    xmlFactoryObject = XmlPullParserFactory.newInstance();
+                    XmlPullParser myparser = xmlFactoryObject.newPullParser();
+                    myparser.setInput(new StringReader(contents));
+                    int event = myparser.getEventType();
+                    while (event != XmlPullParser.END_DOCUMENT) {
+                        String name = myparser.getName();
+                        switch (event) {
+                            case XmlPullParser.START_TAG:
+                                break;
 
-                        case XmlPullParser.END_TAG:
-                            if (name.equals("PrintLetterBarcodeData")) {
-                                if (!checkIfExists(myparser.getAttributeValue(null, "uid"))) {
-                                    mRealm.beginTransaction();
-                                    PrintLetterBarcodeData barcodeData = mRealm.createObject(PrintLetterBarcodeData.class);
-                                    barcodeData.setUid(myparser.getAttributeValue(null, "uid"));
-                                    barcodeData.setName(myparser.getAttributeValue(null, "name"));
-                                    barcodeData.setCo(myparser.getAttributeValue(null, "co"));
-                                    barcodeData.setDist(myparser.getAttributeValue(null, "dist"));
-                                    barcodeData.setGender(myparser.getAttributeValue(null, "gender"));
-                                    barcodeData.setHouse(myparser.getAttributeValue(null, "house"));
-                                    barcodeData.setLoc(myparser.getAttributeValue(null, "loc"));
-                                    barcodeData.setPc(myparser.getAttributeValue(null, "pc"));
-                                    barcodeData.setState(myparser.getAttributeValue(null, "state"));
-                                    barcodeData.setStreet(myparser.getAttributeValue(null, "street"));
-                                    barcodeData.setVtc(myparser.getAttributeValue(null, "vtc"));
-                                    barcodeData.setYob(myparser.getAttributeValue(null, "yob"));
-                                    mRealm.commitTransaction();
-                                } else
-                                    Snackbar.make(mLayout, "Card already scanned", Snackbar.LENGTH_SHORT).show();
-                            }
-                            break;
+                            case XmlPullParser.END_TAG:
+                                if (name.equals("PrintLetterBarcodeData")) {
+                                    if (!checkIfExists(myparser.getAttributeValue(null, "uid"))) {
+                                        mRealm.beginTransaction();
+                                        PrintLetterBarcodeData barcodeData = mRealm.createObject(PrintLetterBarcodeData.class);
+                                        barcodeData.setUid(myparser.getAttributeValue(null, "uid"));
+                                        barcodeData.setName(myparser.getAttributeValue(null, "name"));
+                                        barcodeData.setCo(myparser.getAttributeValue(null, "co"));
+                                        barcodeData.setDist(myparser.getAttributeValue(null, "dist"));
+                                        barcodeData.setGender(myparser.getAttributeValue(null, "gender"));
+                                        barcodeData.setHouse(myparser.getAttributeValue(null, "house"));
+                                        barcodeData.setLoc(myparser.getAttributeValue(null, "loc"));
+                                        barcodeData.setPc(myparser.getAttributeValue(null, "pc"));
+                                        barcodeData.setState(myparser.getAttributeValue(null, "state"));
+                                        barcodeData.setStreet(myparser.getAttributeValue(null, "street"));
+                                        barcodeData.setVtc(myparser.getAttributeValue(null, "vtc"));
+                                        barcodeData.setYob(myparser.getAttributeValue(null, "yob"));
+                                        mRealm.commitTransaction();
+                                    } else
+                                        Snackbar.make(mLayout, "Card already scanned", Snackbar.LENGTH_SHORT).show();
+                                }
+                                break;
+                        }
+                        event = myparser.next();
                     }
-                    event = myparser.next();
+                } catch (XmlPullParserException | IOException e) {
+                    Snackbar.make(mLayout, "Invalid QR Code", Snackbar.LENGTH_LONG).show();
+                    e.printStackTrace();
                 }
-            } catch (XmlPullParserException | IOException e) {
-                Snackbar.make(mLayout, "Invalid QR Code", Snackbar.LENGTH_LONG).show();
-                e.printStackTrace();
             }
             mDataList.clear();
             mRealmResultList = mRealm.where(PrintLetterBarcodeData.class).findAll();

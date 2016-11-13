@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
  * Created by apple on 13/11/16.

@@ -32,7 +32,6 @@ public class CommandEntryActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_command_entry);
 
-        Log.d("jhsj", "CHECK");
         txtSpeechInput = (TextView) findViewById(R.id.textSpeechInput);
         btnSpeak = (ImageButton) findViewById(R.id.speechButton);
         mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
@@ -77,13 +76,16 @@ public class CommandEntryActivity extends AppCompatActivity {
                     txtSpeechInput.setText(result.get(0));
                     // put in 2 second time here to display recognized text - use handler (wait then change activity)
                     Log.d("msg", "MSG" + result.get(0));
-                    if (result.get(0).equals("MOVIES"))  {
+                    if (result.get(0).equalsIgnoreCase("movies"))  {
                         switchToMovies();
                     }
-                    else if (result.get(0).equals("CARD"))  {
+                    else if (result.get(0).equalsIgnoreCase("card"))  {
                         openCards();;
                     }
-                    else if (result.get(0).equals("SILENCE"))  {
+                    else if (result.get(0).equalsIgnoreCase("aadhar"))  {
+                        aadharReader();
+                    }
+                    else if (result.get(0).equalsIgnoreCase("silence"))  {
                         if (mPhoneIsSilent) {
                             //change back to normal mode
                             mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
@@ -123,6 +125,11 @@ public class CommandEntryActivity extends AppCompatActivity {
 
     public void openCards ()  {
         Intent intent = new Intent(this, NFCReader.class);
+        startActivity(intent);
+    }
+
+    public void aadharReader ()  {
+        Intent intent = new Intent(this, AadharInfo.class);
         startActivity(intent);
     }
 

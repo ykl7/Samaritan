@@ -1,5 +1,8 @@
 package com.darkarmy.ykl.samaritan;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by apple on 13/11/16.
  */

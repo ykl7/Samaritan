@@ -29,6 +29,8 @@
         </activity>
         <activity android:name=".MovieActivity" />
         <activity android:name=".Recommendation" />
+        <activity android:name=".AadharInfo" />
+        <activity android:name=".ScannerActivity" />
         <activity android:name=".NFCReader">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
