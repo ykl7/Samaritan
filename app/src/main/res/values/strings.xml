@@ -7,4 +7,6 @@
     <string name="mic_tap">Tap on mic to speak</string>
     <string name="generate_rec">Netflix and Chill</string>
     <string name="explanation">Explain NFC</string>
+    <string name="title_activity_scanner">Scan Card</string>
+    <string name="no_cards_to_show">No cards to show</string>
 </resources>
