@@ -71,42 +71,31 @@ public class Recommendation extends AppCompatActivity {
 
             if (jsonStr != null) {
                 try {
-//                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONObject c = new JSONObject(jsonStr);
 
-//                    // Getting JSON Array node
-//                    JSONArray data = jsonObj.getJSONArray("contacts");
-//
-//                    // looping through All Contacts
-//                    for (int i = 0; i < data.length(); i++) {
-                        JSONObject c = new JSONObject(jsonStr);
+                    String title = c.getString("Title");
+                    String year = c.getString("Year");
+                    String genre = c.getString("Genre");
+                    String plot = c.getString("Plot");
+                    String director = c.getString("Director");
+                    String runtime = c.getString("Runtime");
+                    String releaseDate = c.getString("Released");
+                    String imdbRating = c.getString("imdbRating");
+                    String metascore = c.getString("Metascore");
 
-                        String title = c.getString("Title");
-                        String year = c.getString("Year");
-                        String genre = c.getString("Genre");
-                        String plot = c.getString("Plot");
-                        String director = c.getString("Director");
-                        String runtime = c.getString("Runtime");
-                        String releaseDate = c.getString("Released");
-                        String imdbRating = c.getString("imdbRating");
-                        String metascore = c.getString("Metascore");
+                    HashMap<String, String> movie = new HashMap<>();
 
-                        // tmp hash map for single contact
-                        HashMap<String, String> movie = new HashMap<>();
+                    movie.put("title", title);
+                    movie.put("year", "Year"+year);
+                    movie.put("genre", genre);
+                    movie.put("plot", plot);
+                    movie.put("director", director);
+                    movie.put("runtime", runtime);
+                    movie.put("releaseDate", releaseDate);
+                    movie.put("imdbRating", imdbRating);
+                    movie.put("metascore", metascore);
 
-                        // adding each child node to HashMap key => value
-                        movie.put("title", title);
-                        movie.put("year", "Year"+year);
-                        movie.put("genre", genre);
-                        movie.put("plot", plot);
-                        movie.put("director", director);
-                        movie.put("runtime", runtime);
-                        movie.put("releaseDate", releaseDate);
-                        movie.put("imdbRating", imdbRating);
-                        movie.put("metascore", metascore);
-
-                        // adding contact to contact list
-                        omdbData.add(movie);
-//                    }
+                    omdbData.add(movie);
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {
@@ -131,21 +120,15 @@ public class Recommendation extends AppCompatActivity {
                                 .show();
                     }
                 });
-
             }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            // Dismiss the progress dialog
             if (pDialog.isShowing())
                 pDialog.dismiss();
-            /**
-             * Updating parsed JSON data into ListView
-             * */
             ListAdapter adapter = new SimpleAdapter(
                     Recommendation.this, omdbData,
                     R.layout.list_item, new String[]{"title", "year", "genre",

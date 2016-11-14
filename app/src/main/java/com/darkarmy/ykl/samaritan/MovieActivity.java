@@ -32,10 +32,15 @@ public class MovieActivity extends AppCompatActivity {
                 "X Men",
                 "Theory of Everything",
                 "Danish Girl",
-                "War Horse"};
+                "War Horse",
+                "The Artist",
+                "Rush",
+                "Eragon",
+                "Up",
+                "Roman Holiday"};
 
         Random r = new Random();
-        int index = r.nextInt(11 - 0) + 0;
+        int index = r.nextInt(16 - 0) + 0;
 
         String param = movieTitles[index];
         param = param.replace(" ", "+");
