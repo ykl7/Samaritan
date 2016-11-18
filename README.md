@@ -13,3 +13,9 @@ Stuff used:
 * Recycler and Card Design
 * [Realm DB](https://realm.io)
 * [ZXingBarcodeScanner](https://www.github.com/zxing/zxing)
+
+Activation Commands:
+* movies
+* card
+* silencer
+* aadhar

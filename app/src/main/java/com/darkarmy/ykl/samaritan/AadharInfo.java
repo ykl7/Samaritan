@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -57,6 +58,8 @@ public class AadharInfo extends AppCompatActivity implements RecyclerViewAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_aadhar);
 
         mRealm = Realm.getInstance(new RealmConfiguration.Builder(AadharInfo.this).build());

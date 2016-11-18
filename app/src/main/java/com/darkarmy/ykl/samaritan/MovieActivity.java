@@ -37,10 +37,13 @@ public class MovieActivity extends AppCompatActivity {
                 "Rush",
                 "Eragon",
                 "Up",
-                "Roman Holiday"};
+                "Roman Holiday",
+                "Zila Ghaziabad",
+                "Interstellar",
+                "Inception"};
 
         Random r = new Random();
-        int index = r.nextInt(16 - 0) + 0;
+        int index = r.nextInt(19 - 0) + 0;
 
         String param = movieTitles[index];
         param = param.replace(" ", "+");

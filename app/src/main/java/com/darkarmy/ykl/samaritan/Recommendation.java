@@ -86,14 +86,14 @@ public class Recommendation extends AppCompatActivity {
                     HashMap<String, String> movie = new HashMap<>();
 
                     movie.put("title", title);
-                    movie.put("year", "Year"+year);
+                    movie.put("year", "Year "+year);
                     movie.put("genre", genre);
                     movie.put("plot", plot);
                     movie.put("director", director);
                     movie.put("runtime", runtime);
                     movie.put("releaseDate", releaseDate);
-                    movie.put("imdbRating", imdbRating);
-                    movie.put("metascore", metascore);
+                    movie.put("imdbRating", "imdbRating = " + imdbRating);
+                    movie.put("metascore", "MetaScore = " + metascore);
 
                     omdbData.add(movie);
                 } catch (final JSONException e) {

@@ -80,7 +80,7 @@ public class CommandEntryActivity extends AppCompatActivity {
                         switchToMovies();
                     }
                     else if (result.get(0).equalsIgnoreCase("card"))  {
-                        openCards();;
+                        openCards();
                     }
                     else if (result.get(0).equalsIgnoreCase("aadhar"))  {
                         aadharReader();
