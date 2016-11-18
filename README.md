@@ -17,5 +17,5 @@ Stuff used:
 Activation Commands:
 * movies
 * card
-* silencer
+* silence
 * aadhar
